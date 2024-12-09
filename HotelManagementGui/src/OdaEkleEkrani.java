@@ -1,9 +1,10 @@
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class OdaEkleEkrani extends JFrame {
-    public OdaEkleEkrani() {
+    public OdaEkleEkrani(JFrame previousFrame, OtelOdaYonetici odaYonetici) {
         setTitle("Oda Ekle");
-        setSize(300, 300);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
 
@@ -14,24 +15,17 @@ public class OdaEkleEkrani extends JFrame {
         JTextField kapasiteField = new JTextField();
         JLabel fiyatLabel = new JLabel("Fiyat:");
         JTextField fiyatField = new JTextField();
-        JLabel odaDurumuLabel = new JLabel("Durum:");
-        JTextField odaDurumuField = new JTextField();
-        JLabel manzaraLabel = new JLabel("Manzara:");
-        JTextField manzaraField = new JTextField();
-
         JButton ekleButton = new JButton("Ekle");
+        JButton geriButton = new JButton("GERİ");
 
-        odaNumarasiLabel.setBounds(20, 20, 100, 30);
-        odaNumarasiField.setBounds(120, 20, 150, 30);
-        kapasiteLabel.setBounds(20, 60, 100, 30);
-        kapasiteField.setBounds(120, 60, 150, 30);
-        fiyatLabel.setBounds(20, 100, 100, 30);
-        fiyatField.setBounds(120, 100, 150, 30);
-        odaDurumuLabel.setBounds(20, 140, 100, 30);
-        odaDurumuField.setBounds(120, 140, 150, 30);
-        manzaraLabel.setBounds(20, 180, 100, 30);
-        manzaraField.setBounds(120, 180, 150, 30);
-        ekleButton.setBounds(100, 220, 100, 30);
+        odaNumarasiLabel.setBounds(20, 20, 120, 30);
+        odaNumarasiField.setBounds(150, 20, 200, 30);
+        kapasiteLabel.setBounds(20, 60, 120, 30);
+        kapasiteField.setBounds(150, 60, 200, 30);
+        fiyatLabel.setBounds(20, 100, 120, 30);
+        fiyatField.setBounds(150, 100, 200, 30);
+        ekleButton.setBounds(50, 160, 120, 30);
+        geriButton.setBounds(200, 160, 120, 30);
 
         add(odaNumarasiLabel);
         add(odaNumarasiField);
@@ -39,23 +33,45 @@ public class OdaEkleEkrani extends JFrame {
         add(kapasiteField);
         add(fiyatLabel);
         add(fiyatField);
-        add(odaDurumuLabel);
-        add(odaDurumuField);
-        add(manzaraLabel);
-        add(manzaraField);
         add(ekleButton);
+        add(geriButton);
 
+        // Oda ekleme işlemi
         ekleButton.addActionListener(e -> {
-            int odaNumarasi = Integer.parseInt(odaNumarasiField.getText());
-            int kapasite = Integer.parseInt(kapasiteField.getText());
-            double fiyat = Double.parseDouble(fiyatField.getText());
-            String odaDurumu = odaDurumuField.getText();
-            String manzara = manzaraField.getText();
+            try {
+                String odaNumarasi = odaNumarasiField.getText().trim();
+                String kapasite = kapasiteField.getText().trim();
+                String fiyat = fiyatField.getText().trim();
 
-            //Oda oda = new Oda();
-            //oda.odaEkle(odaNumarasi, kapasite, fiyat, odaDurumu, manzara); // Oda ekleme işlemi
+                if (odaNumarasi.isEmpty() || kapasite.isEmpty() || fiyat.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Tüm alanları doldurun!", "Hata", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            JOptionPane.showMessageDialog(this, "Oda başarıyla eklendi!");
+                if (odaYonetici.odaMevcutMu(Integer.parseInt(odaNumarasi))) {
+                    JOptionPane.showMessageDialog(this, "Bu oda zaten mevcut!", "Hata", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Yeni oda oluşturma ve ekleme
+                Oda yeniOda = new Oda(Integer.parseInt(odaNumarasi), Integer.parseInt(kapasite), Double.parseDouble(fiyat));
+                odaYonetici.odaEkle(yeniOda);
+
+                JOptionPane.showMessageDialog(this, "Oda başarıyla eklendi!");
+
+                // Alanları temizleme
+                odaNumarasiField.setText("");
+                kapasiteField.setText("");
+                fiyatField.setText("");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Geçerli sayısal değerler girin!", "Hata", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // GERİ butonu
+        geriButton.addActionListener(e -> {
+            previousFrame.setVisible(true);
+            dispose();
         });
 
         setVisible(true);
