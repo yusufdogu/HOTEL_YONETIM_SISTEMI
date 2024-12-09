@@ -1,25 +1,36 @@
 import javax.swing.*;
+import java.util.ArrayList;
 
-public class RezervasyonListeEkrani extends JFrame {
-    public RezervasyonListeEkrani() {
-        setTitle("Rezervasyonları Gör");
+public class RezervasyonListeleEkrani extends JFrame {
+    public RezervasyonListeleEkrani(JFrame previousFrame, OtelMisafirYonetici misafirYonetici) {
+        setTitle("Rezervasyonları Listele");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
 
-        JTextArea textArea = new JTextArea();
-        textArea.setBounds(20, 20, 350, 300);
-        textArea.setEditable(false);
+        // TextArea: Rezervasyonları göstermek için
+        JTextArea rezervasyonListesi = new JTextArea();
+        rezervasyonListesi.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(rezervasyonListesi);
+        scrollPane.setBounds(20, 20, 350, 300);
+
+        JButton geriButton = new JButton("GERİ");
+        geriButton.setBounds(150, 330, 100, 30);
+
+        add(scrollPane);
+        add(geriButton);
 
         // Rezervasyonları listeleme
-        //Rezervasyon rezervasyon = new Rezervasyon();
-        //rezervasyon.rezervasyonListele(); // Rezervasyonları listeleme işlemi (veritabanı üzerinden)
+        ArrayList<Misafir> misafirler = misafirYonetici.getMisafirler(); // Doğru method
+        for (Misafir misafir : misafirler) {
+            rezervasyonListesi.append(misafir.toString() + "\n");
+        }
 
-        // Örnek: Rezervasyon verisi yazdırma (gerçek veritabanı sorgusuyla bu dinamik hale gelir)
-        textArea.setText("Rezervasyon No: 12345, Oda: 101, İsim: Ahmet Kaya\n");
-        textArea.append("Rezervasyon No: 67890, Oda: 102, İsim: Elif Yılmaz\n");
-
-        add(textArea);
+        // GERİ butonu
+        geriButton.addActionListener(e -> {
+            previousFrame.setVisible(true);
+            dispose();
+        });
 
         setVisible(true);
     }
