@@ -1,11 +1,39 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class RezervasyonSilEkrani extends JFrame {
-    public RezervasyonSilEkrani() {
+    private JFrame previousFrame;
+    public RezervasyonSilEkrani(JFrame previousFrame) {
+        this.previousFrame = previousFrame;
+
         setTitle("Rezervasyon Sil");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
+
+        // Menü çubuğu oluştur
+        JMenuBar menuBar = new JMenuBar();
+
+        // Geri Butonu
+        JButton backButton = new JButton("⬅ Geri");
+        backButton.addActionListener((ActionEvent e) -> {
+            previousFrame.setVisible(true); // Önceki ekranı göster
+            dispose(); // Mevcut ekranı kapat
+        });
+
+        // Yenile Butonu
+        JButton refreshButton = new JButton("🔄 Yenile");
+        refreshButton.addActionListener((ActionEvent e) -> {
+            new RezervasyonSilEkrani(previousFrame); // Bu ekranı yeniden başlat
+            dispose(); // Mevcut ekranı kapat
+        });
+
+        // Menü çubuğuna butonları ekle
+        menuBar.add(backButton);
+        menuBar.add(refreshButton);
+
+        // Menü çubuğunu pencereye ekle
+        setJMenuBar(menuBar);
 
         // Bileşenler
         JLabel rezervasyonNoLabel = new JLabel("Rezervasyon No:");

@@ -1,11 +1,38 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class OdaEkleEkrani extends JFrame {
-    public OdaEkleEkrani() {
+    private JFrame previousFrame;
+    public OdaEkleEkrani(JFrame previousFrame) {
+        this.previousFrame = previousFrame;
         setTitle("Oda Ekle");
         setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
+
+        // Menü çubuğu oluştur
+        JMenuBar menuBar = new JMenuBar();
+
+        // Geri Butonu
+        JButton backButton = new JButton("⬅ Geri");
+        backButton.addActionListener((ActionEvent e) -> {
+            previousFrame.setVisible(true); // Önceki ekranı göster
+            dispose(); // Mevcut ekranı kapat
+        });
+
+        // Yenile Butonu
+        JButton refreshButton = new JButton("🔄 Yenile");
+        refreshButton.addActionListener((ActionEvent e) -> {
+            new OdaEkleEkrani(previousFrame); // Bu ekranı yeniden başlat
+            dispose(); // Mevcut ekranı kapat
+        });
+
+        // Menü çubuğuna butonları ekle
+        menuBar.add(backButton);
+        menuBar.add(refreshButton);
+
+        // Menü çubuğunu pencereye ekle
+        setJMenuBar(menuBar);
 
         // Bileşenler
         JLabel odaNumarasiLabel = new JLabel("Oda Numarası:");
